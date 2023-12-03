@@ -2,14 +2,23 @@ import { createClient } from 'redis';
 
 class RedisClient {
   constructor() {
-    this.client = createClient();
+    this.client = createClient({port: 6379, host: 'localhost'});
+
     this.client.on('error', (err) => {
       console.log(err);
     });
   }
 
   isAlive() {
-    return this.client.connected;
+    return new Promise((resolve) => {
+      this.client.ping('CHECK', (err, result) => {
+        if (err || result !== 'CHECK') {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
   }
 
   async get(key) {
