@@ -4,7 +4,7 @@
         "es6": true
     },
     "extends": [
-        "airbnb-base"
+        "airbnb-base", "eslint:recommended", "plugin:import/errors", "plugin:import/warnings"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -15,5 +15,8 @@
         "sourceType": "module"
     },
     "rules": {
+        "import/extensions": ["error", "ignorePackages"],
+        "max-len": ["error", { "code": 80 }],
+        "no-console": "off"
     }
 }

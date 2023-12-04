@@ -1,30 +1,24 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
-const uri = 'mongodb://localhost:27017';
-const client = new MongoClient(uri, { useUnifiedTopology: true });
-
-const dbName = 'mydb';
-
-async function main() {
-    await client.connect();
-    console.log('Connected successfully to server');
-    const db = client.db(dbName);
-    const collection = db.collection('documents');
-    const insertMany = await collection.insertMany([
-        { a: 1 }, { a: 2 }, { a: 3 }
-    ]);
-    console.log('Inserted documents =>', insertMany);
-    const findResult = await collection.find({}).toArray();
-    console.log('Found documents =>', findResult);
-    const updateResult = await collection.updateOne({ a: 1 }, { $set: { b: 1 } });
-    console.log('Updated documents =>', updateResult);
-    const deleteResult = await collection.deleteOne({ a: 3 });
-    console.log('Deleted documents =>', deleteResult);
-    console.log('Found documents =>', await collection.find({}).toArray());
-    return 'done.';
+class DBClient {
+  constructor() {
+    this.host = process.env.dbHost || 'localhost';
+    this.port = process.env.dbPort || 27017;
+    this.database = process.env.dbDatabase || 'files_manager';
+    this.url = `mongodb://${this.host}:${this.port}`;
+    MongoClient.connect(
+      this.url,
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      (err, client) => {
+        if (err) {
+          this.db = false;
+        } else {
+          this.db = client.db(this.database);
+        }
+      },
+    );
+  }
 }
 
-main()
-    .then(console.log)
-    .catch(console.error)
-    .finally(() => client.close());
+const dbClient = new DBClient();
+export default dbClient;

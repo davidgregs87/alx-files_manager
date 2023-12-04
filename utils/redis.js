@@ -2,7 +2,7 @@ import { createClient } from 'redis';
 
 class RedisClient {
   constructor() {
-    this.client = createClient({port: 6379, host: 'localhost'});
+    this.client = createClient();
 
     this.client.on('error', (err) => {
       console.log(err);
@@ -10,15 +10,7 @@ class RedisClient {
   }
 
   isAlive() {
-    return new Promise((resolve) => {
-      this.client.ping('CHECK', (err, result) => {
-        if (err || result !== 'CHECK') {
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
-    });
+    return this.client.connected;
   }
 
   async get(key) {
@@ -59,4 +51,4 @@ class RedisClient {
 }
 
 const redisClient = new RedisClient();
-module.exports = redisClient;
+export default redisClient;
