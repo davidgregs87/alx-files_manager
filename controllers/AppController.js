@@ -17,5 +17,4 @@ class AppController {
   }
 }
 
-const appControl = new AppController();
-export default appControl;
+export default AppController;
