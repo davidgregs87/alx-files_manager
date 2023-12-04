@@ -1,5 +1,5 @@
-const express = require('express');
-const routes = require('./routes/index');
+import express from 'express';
+import routes from './routes';
 
 const app = express();
 
@@ -9,4 +9,4 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-module.exports = app;
+export default app;
