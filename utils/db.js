@@ -1,4 +1,4 @@
-import { MongoClient, ObjectID } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 class DBClient {
   constructor() {
@@ -33,11 +33,24 @@ class DBClient {
   }
 
   async findUserbyId(userID) {
-    return this.db.collection('users').findOne({ _id: new ObjectID(userID) });
+    return this.db.collection('users').findOne({ _id: new ObjectId(userID) });
+  }
+
+  async findFileById(fileId) {
+    const objectId = new ObjectId(fileId);
+    return this.db.collection('files').findOne({ _id: objectId });
   }
 
   async createUser(email, password) {
     return this.db.collection('users').insertOne({ email, password });
+  }
+
+  async createFile(data) {
+    return this.db.collection('files').insertOne(data);
+  }
+
+  async findFileByParentId(parentId = 0) {
+    return this.db.collection('files').find({ parentId }).toArray();
   }
 }
 
