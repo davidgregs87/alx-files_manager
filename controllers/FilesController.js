@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import fs from 'fs/promises';
 import { v4 as uuidv4 } from 'uuid';
 import redisClient from '../utils/redis';
@@ -68,6 +67,8 @@ class FilesController {
       console.error('Error processing file upload:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
+
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 
   static async saveFile(data) {
