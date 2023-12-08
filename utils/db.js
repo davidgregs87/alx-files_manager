@@ -52,6 +52,10 @@ class DBClient {
   async getFilesByParentId(idParent = 0) {
     return this.db.collection('files').find({ idParent }).toArray();
   }
+
+  async aggregateFiles(pipeline) {
+    return this.db.collection('files').aggregate(pipeline).toArray();
+  }
 }
 
 const dbClient = new DBClient();
