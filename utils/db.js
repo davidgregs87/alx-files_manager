@@ -49,8 +49,8 @@ class DBClient {
     return this.db.collection('files').insertOne(data);
   }
 
-  async findFileByParentId(parentId = 0) {
-    return this.db.collection('files').find({ parentId }).toArray();
+  async getFilesByParentId(idParent = 0) {
+    return this.db.collection('files').find({ idParent }).toArray();
   }
 }
 
