@@ -119,5 +119,45 @@ class FilesController {
     });
     return res.status(200).json(filesArr);
   }
+
+  static async putPublish(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) return res.status(400).json({ error: 'Unauthorized' });
+    const { id } = req.params;
+    const file = await dbClient.findFileById(id);
+    if (!file) return res.status(404).json({ error: 'Not found' });
+    if (file.userId !== userId) return res.status(404).json({ error: 'Not found' });
+    const update = await dbClient.updateFileById(id, true);
+    return res.status(200).json({
+      id: update._id,
+      userId: update.userId,
+      name: update.name,
+      type: update.type,
+      isPublic: update.isPublic,
+      parentId: update.parentId,
+    });
+  }
+
+  static async putUnpublish(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) return res.status(400).json({ error: 'Unauthorized' });
+    const { id } = req.params;
+    const file = await dbClient.findFileById(id);
+    if (!file) return res.status(404).json({ error: 'Not found' });
+    if (file.userId !== userId) return res.status(404).json({ error: 'Not found' });
+    const update = await dbClient.updateFileById(id, false);
+    return res.status(200).json({
+      id: update._id,
+      userId: update.userId,
+      name: update.name,
+      type: update.type,
+      isPublic: update.isPublic,
+      parentId: update.parentId,
+    });
+  }
 }
 export default FilesController;

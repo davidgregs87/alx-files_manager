@@ -56,6 +56,15 @@ class DBClient {
   async aggregateFiles(pipeline) {
     return this.db.collection('files').aggregate(pipeline).toArray();
   }
+
+  async updateFileById(fileId, isPublic) {
+    const result = await this.db.collection('files').findOneAndUpdate(
+      { _id: new ObjectId(fileId) },
+      { $set: { isPublic } },
+      { returnDocument: 'after' },
+    );
+    return result.value;
+  }
 }
 
 const dbClient = new DBClient();
